@@ -9,11 +9,13 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "express-session": "^1.18.1",
     "pg": "^8.13.1"
   },
   "scripts": {
     "start": "node ./index.js",
-    "start-dev": "nodemon ./index.js"
+    "start-dev": "nodemon ./index.js",
+    "build": "echo 'Server does not require building'"
   },
   "devDependencies": {
     "nodemon": "^3.1.7"

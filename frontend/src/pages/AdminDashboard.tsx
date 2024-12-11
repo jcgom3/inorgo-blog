@@ -9,6 +9,7 @@ interface Journal {
   written_by: string;
   created_at: string;
   db_created_at: string;
+  email: string;
 }
 
 const AdminDashboard = () => {
@@ -22,8 +23,7 @@ const AdminDashboard = () => {
       const API_URL = process.env.REACT_APP_API_URL || "";
       try {
         const response = await fetch(`${API_URL}/journals`);
-        const data =
-          (await response.json());
+        const data = await response.json();
         setJournals(data);
         setFilteredJournals(data); // Initialize filtered list
       } catch (error) {
@@ -34,12 +34,32 @@ const AdminDashboard = () => {
     fetchJournals();
   }, []);
 
+  const formatEmail = (email: string) => {
+    // Validate email using regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      console.log("Email validation failed");
+      return "Invalid email";
+    }
+
+    // Format email: Make the first character of the email uppercase
+    const formattedEmail = email.charAt(0).toUpperCase() + email.slice(1);
+    return formattedEmail;
+  };
   // Helper function to capitalize words in written_by
+
   const formatName = (name: string): string => {
     const isAlphabetic = /^[a-zA-Z\s]+$/.test(name);
     if (!isAlphabetic) return name; // Leave as is if non-alphabetic
 
     return name
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
+  };
+
+  const formatTitle = (title: string): string => {
+    return title
       .split(" ")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
       .join(" ");
@@ -54,7 +74,10 @@ const AdminDashboard = () => {
       updatedJournals = updatedJournals.filter(
         (journal) =>
           journal.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          journal.written_by.toLowerCase().includes(searchQuery.toLowerCase())
+          journal.written_by
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          journal.email.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
@@ -96,7 +119,7 @@ const AdminDashboard = () => {
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search by title or author"
+          placeholder="Search by title, author or email"
           className="w-full lg:w-1/3 p-3 border rounded-lg focus:ring focus:ring-blue-300"
         />
         <select
@@ -120,6 +143,7 @@ const AdminDashboard = () => {
           <thead>
             <tr>
               <th className="p-4 border">Title</th>
+              <th className="p-4 border">Email</th>
               <th className="p-4 border">Author</th>
               <th className="p-4 border">Published On</th>
               <th className="p-4 border bg-yellow-100">Actual Timestamp</th>
@@ -134,9 +158,10 @@ const AdminDashboard = () => {
                       to={`/blog/${journal.id}`}
                       className="text-blue-600 hover:underline"
                     >
-                      {journal.title}
+                      {formatTitle(journal.title)}
                     </Link>
                   </td>
+                  <td className="p-4 border">{formatEmail(journal.email)}</td>
                   <td className="p-4 border">
                     {formatName(journal.written_by)}
                   </td>

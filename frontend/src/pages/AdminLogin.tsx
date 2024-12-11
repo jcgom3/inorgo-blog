@@ -67,14 +67,29 @@ const AdminLogin = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    const adminPassword = process.env.ADMIN_PASSWORD;
+  const handleLogin = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
 
-    if (username === "jacob.furst@ucf.edu" && password === adminPassword) {
-      localStorage.setItem("admin_logged_in", "true");
-      navigate("/admin-dashboard");
-    } else {
-      setError("Invalid username or password");
+      if (response.ok) {
+        const sessionExpiration = Date.now() + 15 * 60 * 1000; // 15 minutes
+        localStorage.setItem("admin_logged_in", "true");
+        localStorage.setItem(
+          "session_expiration",
+          sessionExpiration.toString()
+        );
+        navigate("/admin-dashboard");
+      } else {
+        const { message } = await response.json();
+        setError(message || "Invalid username or password");
+      }
+    } catch (err) {
+      console.error("Error during login:", err);
+      setError("Something went wrong. Please try again.");
     }
   };
 

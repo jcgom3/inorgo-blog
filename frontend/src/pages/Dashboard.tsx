@@ -8,6 +8,7 @@ interface Journal {
   description: string;
   written_by: string;
   created_at: string;
+  email: string;
 }
 
 const Dashboard = () => {
@@ -18,11 +19,14 @@ const Dashboard = () => {
 
   const [written_by, setWrittenBy] = useState("");
   const [created_at, setCreatedAt] = useState("");
+  const [email, setEmail] = useState("");
+
+  const API_URL = process.env.REACT_APP_API_URL || "";
 
   // Fetch journals from backend
   useEffect(() => {
     const fetchJournals = async () => {
-      const API_URL = process.env.REACT_APP_API_URL || "";
+      
       try {
         const response = await fetch(`${API_URL}/journals`);
         if (!response.ok) throw new Error("Failed to fetch journals");
@@ -45,29 +49,26 @@ const Dashboard = () => {
       content,
       written_by,
       created_at,
+      email,
     };
 
     try {
-      const response = await fetch("http:///api/journals", {
+      const response = await fetch(`${API_URL}/journals`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newJournal),
       });
-      const responseAPI = await fetch("http://localhost:5000/journals", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newJournal),
-      });
-      if (!response.ok || !responseAPI.ok)
+      if (!response.ok)
         throw new Error("Failed to add journal");
       const savedJournal =
-        (await response.json()) || (await responseAPI.json());
+        (await response.json());
       setJournals([savedJournal, ...journals]);
       setTitle("");
       setDescription("");
       setContent("");
       setWrittenBy("");
       setCreatedAt("");
+      setEmail("");
     } catch (error) {
       console.error("Error adding journal:", error);
     }
@@ -82,7 +83,7 @@ const Dashboard = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-gray-600 font-medium mb-2">
-              Title
+              Title:
             </label>
             <input
               type="text"
@@ -94,7 +95,7 @@ const Dashboard = () => {
           </div>
           <div>
             <label className="block text-gray-600 font-medium mb-2">
-              Description
+              Description:
             </label>
             <input
               value={description}
@@ -104,7 +105,7 @@ const Dashboard = () => {
           </div>
           <div>
             <label className="block text-gray-600 font-medium mb-2">
-              Content
+              Content:
             </label>
             <textarea
               value={content}
@@ -115,7 +116,7 @@ const Dashboard = () => {
           </div>
           <div>
             <label className="block text-gray-600 font-medium mb-2">
-              Written By
+              Written By:
             </label>
             <input
               type="text"
@@ -127,7 +128,24 @@ const Dashboard = () => {
           </div>
           <div>
             <label className="block text-gray-600 font-medium mb-2">
-              Created At
+              Email:
+            </label>
+            <input
+              type="email"
+              placeholder="Enter your email (required)"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full p-3 border rounded-lg focus:ring focus:ring-blue-300"
+              required
+            />
+            <small>
+              This email is for search purposes and upcoming functionality.
+            </small>
+          </div>
+
+          <div>
+            <label className="block text-gray-600 font-medium mb-2">
+              Published on:
             </label>
             <input
               type="date"

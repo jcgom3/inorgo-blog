@@ -12,7 +12,8 @@
     "build-server": "echo 'Server does not require building'"
   },
   "dependencies": {
-    "concurrently": "^8.0.0"
+    "concurrently": "^8.0.0",
+    "server": "^1.0.41"
   },
   "devDependencies": {
     "patch-package": "^8.0.0",
