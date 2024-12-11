@@ -6,10 +6,10 @@
     "start": "concurrently \"npm run start-server\" \"npm run start-frontend\"",
     "start-server": "npm --prefix server run start",
     "start-frontend": "npm --prefix frontend run start",
+    "install": "npm install --prefix frontend && npm install --prefix server",
     "build": "npm run build-frontend && npm run build-server",
     "build-frontend": "npm --prefix frontend run build",
-    "build-server": "npm --prefix server run build",
-    "install": "npm install --prefix frontend && npm install --prefix server"
+    "build-server": "echo 'Server does not require building'"
   },
   "dependencies": {
     "concurrently": "^8.0.0"

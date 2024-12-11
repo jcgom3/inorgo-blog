@@ -2,24 +2,22 @@
   "version": 2,
   "builds": [
     {
-      "src": "server/index.js",
-      "use": "@vercel/node"
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "build" }
     },
     {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build"
+      "src": "server/index.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "server/index.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "frontend/$1"
-    }
+    { "src": "/api/(.*)", "dest": "server/index.js" },
+    { "src": "/(.*)", "dest": "frontend/build/$1" }
   ],
- "build": { "buildCommand": "next build" },
-  "outputDirectory": "frontend/build"
+  "build": {
+    "env": {
+      "REACT_APP_API_URL": "/api"
+    }
+  }
 }
