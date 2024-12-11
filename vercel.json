@@ -23,5 +23,6 @@
   "build": {
     "command": "npm install --legacy-peer-deps && npm run build"
   },
+  "buildCommand": "next build",
   "outputDirectory": "frontend/build"
 }
