@@ -38,9 +38,10 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
+const DB = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED;
 // PostgreSQL Pool Configuration
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: DB,
   ssl:
     process.env.NODE_ENV === "production"
       ? { rejectUnauthorized: false }

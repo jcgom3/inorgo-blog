@@ -18,7 +18,12 @@
     { "src": "/(.*)", "dest": "frontend/$1" }
   ],
   "env": {
-    "DATABASE_URL": "@DATABASE_URL"
+    "DATABASE_URL": "@DATABASE_URL",
+    "DATABASE_URL_UNPOOLED": "@DATABASE_URL_UNPOOLED",
+    "SESSION_SECRET": "@SESSION_SECRET",
+    "ADMIN_USERNAME": "@ADMIN_USERNAME",
+    "ADMIN_PASSWORD": "@ADMIN_PASSWORD",
+    "NODE_ENV": "production"
   },
   "devCommand": "npm run start",
   "buildCommand": "npm run build",
