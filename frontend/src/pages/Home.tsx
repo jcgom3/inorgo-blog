@@ -155,14 +155,13 @@ export default function Home() {
 
   useEffect(() => {
     const fetchJournals = async () => {
+      const API_URL = process.env.REACT_APP_API_URL || "";
       try {
-        const response = await fetch("http://localhost:5000/journals");
-        const responseAPI = await fetch("http://api/journals");
-        if (!response.ok || !responseAPI.ok)
+        const response = await fetch(`${API_URL}/journals`);
+        if (!response.ok )
           throw new Error("Failed to fetch journals");
 
-        const data: Journal[] =
-          (await response.json()) || (await responseAPI.json());
+        const data: Journal[] = (await response.json());
         setJournals(data); // Use data as-is
         setFilteredJournals(data); // Initialize filtered list
       } catch (error) {

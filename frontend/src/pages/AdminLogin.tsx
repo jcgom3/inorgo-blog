@@ -58,7 +58,6 @@
 
 // export default AdminLogin;
 
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -69,7 +68,9 @@ const AdminLogin = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    if (username === "jacob.furst@ucf.edu" && password === "Inorgo-2050!") {
+    const adminPassword = process.env.ADMIN_PASSWORD;
+
+    if (username === "jacob.furst@ucf.edu" && password === adminPassword) {
       localStorage.setItem("admin_logged_in", "true");
       navigate("/admin-dashboard");
     } else {

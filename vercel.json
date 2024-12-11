@@ -12,18 +12,12 @@
   ],
   "routes": [
     {
-      "src": "/localhost:5000/(.*)",
+      "src": "/api/(.*)",
       "dest": "server/index.js"
     },
-    {"src": "/api/(.*)",
-      "dest": "server/index.js"},
     {
       "src": "/(.*)",
       "dest": "frontend/$1"
     }
-  ],
-  "build": {
-    "command": "npm install --legacy-peer-deps && npm run build"
-  },
-  "outputDirectory": "frontend/build"
+  ]
 }

@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../index.css"; // Import Tailwind styles
-import Header from "../components/Header";
-import Footer from "../components/Footer";
 
 interface Journal {
   id: number;
@@ -24,13 +22,11 @@ const Dashboard = () => {
   // Fetch journals from backend
   useEffect(() => {
     const fetchJournals = async () => {
+      const API_URL = process.env.REACT_APP_API_URL || "";
       try {
-        const response = await fetch(`http://localhost:5000/journals/`);
-        const responseAPI = await fetch(`http://api/journals/`);
-        if (!response.ok || !responseAPI.ok)
-          throw new Error("Failed to fetch journals");
-        const data: Journal[] =
-          (await response.json()) || (await responseAPI.json());
+        const response = await fetch(`${API_URL}/journals`);
+        if (!response.ok) throw new Error("Failed to fetch journals");
+        const data: Journal[] = await response.json();
         setJournals(data);
       } catch (error) {
         console.error("Error fetching journals:", error);
@@ -52,7 +48,7 @@ const Dashboard = () => {
     };
 
     try {
-      const response = await fetch("http://api/journals", {
+      const response = await fetch("http:///api/journals", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newJournal),

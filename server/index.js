@@ -8,18 +8,23 @@ import * as dotenv from "dotenv";
 const { Pool } = Pg;
 
 // Load environment variables
-dotenv.config({ path: "../.env" });
+dotenv.config({ path: "./.env" });
 
 // Initialize Express app
 const app = express();
 
 // Middleware
-app.use(cors());
+const corsOptions = {
+  origin: ["http://localhost:3000", "https://inorgo-blog.vercel.app"],
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true,
+};
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 // PostgreSQL Pool Configuration
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || process.env.DATABASE_URL_API,
+  connectionString: process.env.DATABASE_URL,
 });
 
 pool.on("connect", () => {
@@ -30,6 +35,17 @@ pool.on("error", (err) => {
   console.error("Database connection error:", err);
   process.exit(1);
 });
+
+const testDatabaseConnection = async () => {
+  try {
+    await pool.query("SELECT NOW()");
+    console.log("Database connection test successful");
+  } catch (err) {
+    console.error("Database connection test failed:", err);
+  }
+};
+
+testDatabaseConnection();
 
 // Helper function to format date as MM/DD/YYYY
 const formatDate = (date) => {

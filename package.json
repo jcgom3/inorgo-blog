@@ -1,0 +1,17 @@
+{
+  "name": "inorgo-blog",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "concurrently \"npm run start-server\" \"npm run start-frontend\"",
+    "start-server": "npm --prefix server run start",
+    "start-frontend": "npm --prefix frontend run start",
+    "build": "npm run build-frontend && npm run build-server",
+    "build-frontend": "npm --prefix frontend run build",
+    "build-server": "npm --prefix server run build",
+    "install": "npm install --prefix frontend && npm install --prefix server"
+  },
+  "dependencies": {
+    "concurrently": "^8.0.0"
+  }
+}

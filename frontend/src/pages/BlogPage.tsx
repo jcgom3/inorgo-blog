@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom"; // For URL params
+import { useParams } from "react-router-dom"; // For URL params
 import Header from "../components/Header";
 import "../index.css"; // Import Tailwind styles
 
@@ -18,12 +18,13 @@ const BlogPage = () => {
 
   useEffect(() => {
     const fetchJournal = async () => {
+      const API_URL = process.env.REACT_APP_API_URL || "";
       try {
         // Use the backend API endpoint
-        const response = await fetch(`http://localhost:5000/journals/${id}`);
-        const responseAPI = await fetch(`http://api/journals/${id}`);
-        if (!response.ok || !responseAPI.ok) throw new Error("Failed to fetch journal");
-        const data: Journal = await response.json() || await responseAPI.json();
+        const response = await fetch(`${API_URL}/journals/${id}`);
+        if (!response.ok) throw new Error("Failed to fetch journal");
+        const data: Journal =
+          (await response.json());
         setJournal(data);
       } catch (error) {
         console.error("Error fetching journal:", error);
