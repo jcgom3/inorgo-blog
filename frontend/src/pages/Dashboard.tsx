@@ -25,9 +25,12 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchJournals = async () => {
       try {
-        const response = await fetch("http://api/journals");
-        if (!response.ok) throw new Error("Failed to fetch journals");
-        const data: Journal[] = await response.json();
+        const response = await fetch(`http://localhost:5000/journals/`);
+        const responseAPI = await fetch(`http://api/journals/`);
+        if (!response.ok || !responseAPI.ok)
+          throw new Error("Failed to fetch journals");
+        const data: Journal[] =
+          (await response.json()) || (await responseAPI.json());
         setJournals(data);
       } catch (error) {
         console.error("Error fetching journals:", error);
@@ -54,8 +57,15 @@ const Dashboard = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newJournal),
       });
-      if (!response.ok) throw new Error("Failed to add journal");
-      const savedJournal = await response.json();
+      const responseAPI = await fetch("http://localhost:5000/journals", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newJournal),
+      });
+      if (!response.ok || !responseAPI.ok)
+        throw new Error("Failed to add journal");
+      const savedJournal =
+        (await response.json()) || (await responseAPI.json());
       setJournals([savedJournal, ...journals]);
       setTitle("");
       setDescription("");

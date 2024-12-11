@@ -19,9 +19,11 @@ const BlogPage = () => {
   useEffect(() => {
     const fetchJournal = async () => {
       try {
-        const response = await fetch(`http://api/journals/${id}`); // Use the backend API endpoint
-        if (!response.ok) throw new Error("Failed to fetch journal");
-        const data: Journal = await response.json();
+        // Use the backend API endpoint
+        const response = await fetch(`http://localhost:5000/journals/${id}`);
+        const responseAPI = await fetch(`http://api/journals/${id}`);
+        if (!response.ok || !responseAPI.ok) throw new Error("Failed to fetch journal");
+        const data: Journal = await response.json() || await responseAPI.json();
         setJournal(data);
       } catch (error) {
         console.error("Error fetching journal:", error);

@@ -20,8 +20,10 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchJournals = async () => {
       try {
-        const response = await fetch("http://api/journals");
-        const data = await response.json();
+        const response = await fetch("http://localhost:5000/journals");
+        const responseAPI = await fetch("http://api/journals");
+        const data =
+          (await response.json() || responseAPI.json());
         setJournals(data);
         setFilteredJournals(data); // Initialize filtered list
       } catch (error) {

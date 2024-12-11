@@ -12,9 +12,11 @@
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
+      "src": "/localhost:5000/(.*)",
       "dest": "server/index.js"
     },
+    {"src": "/api/(.*)",
+      "dest": "server/index.js"},
     {
       "src": "/(.*)",
       "dest": "frontend/$1"

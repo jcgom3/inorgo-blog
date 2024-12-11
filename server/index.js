@@ -3,12 +3,12 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import Pg from "pg";
-import dotenv from "dotenv";
+import * as dotenv from "dotenv";
 
 const { Pool } = Pg;
 
 // Load environment variables
-dotenv.config();
+dotenv.config({ path: "../.env" });
 
 // Initialize Express app
 const app = express();
@@ -19,7 +19,16 @@ app.use(bodyParser.json());
 
 // PostgreSQL Pool Configuration
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL || process.env.DATABASE_URL_API,
+});
+
+pool.on("connect", () => {
+  console.log("Connected to the database");
+});
+
+pool.on("error", (err) => {
+  console.error("Database connection error:", err);
+  process.exit(1);
 });
 
 // Helper function to format date as MM/DD/YYYY
@@ -86,6 +95,11 @@ app.post("/journals", async (req, res) => {
     console.error("Error adding journal:", err);
     res.status(500).json({ error: "Internal Server Error" });
   }
+});
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
 
 // Export the app for Vercel serverless
